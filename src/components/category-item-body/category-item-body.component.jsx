@@ -1,11 +1,10 @@
-import './category-item-body.styles.scss';
+import { CategoryBodyContainer } from "./category-item-body.styles";
 
 const CategoryItemBody = ({title}) => {
-    return <div className='category-body-container'>
+    return <CategoryBodyContainer>
               <h2>{title}</h2>
               <p>Shop Here</p> 
-           </div>
-
+           </CategoryBodyContainer>
 }
 
 export default CategoryItemBody;
