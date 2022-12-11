@@ -71,7 +71,7 @@ const SignInForm = () => {
                     onChange={handleChange}
                 />
                 <div className="buttons-container">
-                    <Button buttonType={BUTTON_TYPE_CLASSES.inverted} type='submit'>SignIn</Button>
+                    <Button buttonType={BUTTON_TYPE_CLASSES.inverted} type='submit' onClick={handleSubmit}>SignIn</Button>
                     <Button buttonType={BUTTON_TYPE_CLASSES.google} type='button' onClick={handleButtonSubmit}>Google SignIn</Button>
                 </div>
             </form>
