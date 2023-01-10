@@ -71,21 +71,19 @@ export const addCollectionsAndDocuments = async(collectionKey, objectsToAdd) => 
 // 3. get query snapshot - executes query and retrieves querySnapShot results 
 // 4. We iterate through that object to retrieve our documentdata and store in our custom object - categoryMap
 //    ie, the documents pertaining to that collection/categories
-export const getCategoriesAndDocuments = async() => {
-    const collectionRef  = collection(db,'categories' );
+export const getCategoriesAndDocuments = async(par) => {
+    const collectionRef  = collection(db, par );
     const q = query(collectionRef);
 
     //get querySnapshot
     const querySnapshot = await getDocs(q);
 
     // iterate over results, fetch and store in custom object
-    const categoriesMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-        const {title, items} = docSnapshot.data();
-        acc[title.toLowerCase()] = items;
-        return acc;    
-    }, {});
+    const categoriesArray = querySnapshot.docs.map((item) => {
+        return item.data();
+    })
 
-    return categoriesMap;
+    return categoriesArray;
 
 }
 
