@@ -1,10 +1,12 @@
-import { useContext } from "react"
 import CheckOutItem from "../../components/checkout-item/checkout-item.component";
 import './checkout.styles.scss';
-import { CartContext } from "../../contexts/cart.context";
+import { useSelector } from "react-redux";
+import { selectCartItems, selectCartTotal } from "../../store/cart/cart.selector";
+import Payment from "../../components/payment-form/payment-form.component";
 
 const CheckOut = () => {
-    const { cartItems, cartItemTotal } = useContext(CartContext);
+    const cartItems = useSelector(selectCartItems);
+    const cartItemTotal = useSelector(selectCartTotal);
     const emptyMsg = "There are no items added";
     return (
         <div className="checkout-container">
@@ -28,7 +30,8 @@ const CheckOut = () => {
             {cartItems.length > 0 ? cartItems.map(cartItem => (
                 <CheckOutItem key={cartItem.id} cartItem={cartItem} />
             )) : emptyMsg}
-            <div className="total">Total : ${cartItemTotal}</div>
+            <div className="total">Total : INR {cartItemTotal}</div>
+            <Payment/>
         </div>
     )
 }

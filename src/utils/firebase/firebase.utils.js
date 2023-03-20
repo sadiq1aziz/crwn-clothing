@@ -61,7 +61,6 @@ export const addCollectionsAndDocuments = async(collectionKey, objectsToAdd) => 
 
     //initiate transaction;
     await batch.commit();
-    console.log("transaction done");
 } 
 
 // get categories and documents
@@ -91,7 +90,6 @@ export const getCategoriesAndDocuments = async(par) => {
 export const createUserDocumentFromAuth = async (userAuth, otherAttributes) => {
     //use doc to get the userDocReference that points to location in Firestore
     const userDocReference = doc(db, 'users', userAuth.uid);
-    console.log(userDocReference);
     //use getDoc to check if the doc exists or not
     const userSnapshot = await getDoc(userDocReference);
 
@@ -112,7 +110,7 @@ export const createUserDocumentFromAuth = async (userAuth, otherAttributes) => {
             console.log('Error creating document', error);
         }
     }
-    return userDocReference;
+    return userSnapshot;
 }
 
 //function to sign up with Email and password
@@ -131,4 +129,18 @@ export const userSignOut = async() => await signOut(auth);
 
 export const onAuthStateChangedListener = (callback) => {
     return onAuthStateChanged(auth, callback);
+}
+
+// for sagas we use a separate method to check for user
+export const getCurrentUser = () => {
+    return new Promise((resolve, reject) => {
+        const unsubscribe = onAuthStateChanged(
+            auth,
+            (userAuth) => {
+                unsubscribe();
+                resolve(userAuth);
+            },
+            reject
+        );
+    })
 }

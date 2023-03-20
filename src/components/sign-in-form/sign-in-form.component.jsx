@@ -1,6 +1,7 @@
 
 import { useState } from "react"
-import {signInUserWithEmailPassword, signInWithGooglePopup} from "../../utils/firebase/firebase.utils"
+import { useDispatch } from "react-redux";
+import { emailSignInStart, googleSignInStart } from "../../store/user/user.action";
 import Button, {BUTTON_TYPE_CLASSES} from "../button/button.component";
 import FormInput from "../form-input/form-input-component";
 import './sign-in-form.styles.scss';
@@ -13,9 +14,9 @@ const DefaultFormFields = {
 
 
 const SignInForm = () => {
+    const dispatch = useDispatch();
     const [formFields, setFormFields] = useState(DefaultFormFields);
     const { email, password } = formFields;
-    console.log(formFields);
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormFields({ ...formFields, [name]: value });
@@ -26,13 +27,13 @@ const SignInForm = () => {
     }
 
     const handleButtonSubmit = async() => {
-        await signInWithGooglePopup();
+        dispatch(googleSignInStart());
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            await signInUserWithEmailPassword(email, password);
+            dispatch(emailSignInStart(email, password))
             resetFormFields();
         } catch (error) {
             switch (error.code) {
@@ -53,7 +54,7 @@ const SignInForm = () => {
         <div className="sign-up-container">
             <h2>Already have an account?</h2>
             <span>Sign in with your email and password</span>
-            <form onSubmit={handleSubmit}>
+            <form>
                 <FormInput
                     label='Email'
                     required

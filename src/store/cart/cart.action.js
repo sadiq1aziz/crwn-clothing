@@ -1,23 +1,24 @@
-import { CartItems } from "../../components/cart-dropdown/cart-dropdown.styles";
 import { createAction } from "../../utils/reducer/reducer.utils";
 import { CART_ACTION_TYPES } from "./cart.types";
-
-export const setCartItems = (cartItems) => {
-    return createAction(CART_ACTION_TYPES.SET_CART_ITEMS, CartItems);
-}
-
 
 export const setIsCartOpen = (toggle) => {
     return createAction(CART_ACTION_TYPES.SET_IS_CART_OPEN, toggle)
 }
 
 
+export const addItemToCart = (cartItems, productToAdd) => {
+    const newCartItems = addCartTtem(cartItems, productToAdd);
+    return createAction(CART_ACTION_TYPES.SET_CART_ITEMS, newCartItems);
+};
 
-
-
-
-
-
+export const decrementOrRemoveCartTtem = (cartItems, productToRemove) => {
+    const newCartItems = decrementOrRemoveTtem(cartItems, productToRemove);
+    return createAction(CART_ACTION_TYPES.SET_CART_ITEMS, newCartItems);
+};
+export const removeCartItem = (cartItems, itemToRemove) => {
+    const newCartItems = removeItem(cartItems, itemToRemove);
+    return createAction(CART_ACTION_TYPES.SET_CART_ITEMS, newCartItems);
+}
 
 
 const decrementOrRemoveTtem = (cartItems, productToRemove) => {

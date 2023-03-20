@@ -23,3 +23,9 @@ export const selectCategoriesMap = createSelector(
         }, {});
     }
 )
+// pull off the loading attrib off of the state
+export const fetchCategoriesLoading = createSelector(
+    [selectCategoriesReducer],
+    (categoriesSlice) => {
+        return categoriesSlice.categoriesIsLoading
+    }); 

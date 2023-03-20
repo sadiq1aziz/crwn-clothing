@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { createAuthUserViaEmailPassword, createUserDocumentFromAuth } from "../../utils/firebase/firebase.utils"
-import Button from "../button/button.component";
+import { useDispatch } from "react-redux";
+import { userSignedUpStart } from "../../store/user/user.action";
+import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import FormInput from "../form-input/form-input-component";
 import './sign-up-form.styles.scss';
 
@@ -14,10 +15,9 @@ const DefaultFormFields = {
 
 
 const SignUpForm = () => {
-
+    const dispatch = useDispatch();
     const [formFields, setFormFields] = useState(DefaultFormFields);
     const { displayName, email, password, confirmPassword } = formFields;
-    console.log(formFields);
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormFields({ ...formFields, [name]: value });
@@ -28,16 +28,15 @@ const SignUpForm = () => {
     }
 
     const handleSubmit = async (event) => {
+        console.log("submit");
         event.preventDefault();
         if (password !== confirmPassword) {
             alert("passwords do not match");
             return;
         }
         try {
-            const response = await createAuthUserViaEmailPassword(email, password);
-            console.log(response);
-            const { user } = response;
-            await createUserDocumentFromAuth(user, { displayName });
+            console.log("submitted");
+            dispatch(userSignedUpStart(email, password, displayName));
             resetFormFields();
         } catch (error) {
             if (error.code === 'auth/email-already-in-use') {
@@ -54,7 +53,7 @@ const SignUpForm = () => {
         <div className="sign-up-container">
             <h2>Don't have an account?</h2>
             <span>Sign up with your email and password</span>
-            <form onSubmit={handleSubmit}>
+            <form>
                 <FormInput
                     label='displayName'
                     required
@@ -87,12 +86,7 @@ const SignUpForm = () => {
                     value={confirmPassword}
                     onChange={handleChange}
                 />
-                <Button
-                    buttonType='inverted'
-                    type='submit'
-                >
-                    SignUp
-                </Button>
+                <Button buttonType={BUTTON_TYPE_CLASSES.inverted} type='submit' onClick={handleSubmit}>SignUp</Button>
             </form>
         </div>
     )

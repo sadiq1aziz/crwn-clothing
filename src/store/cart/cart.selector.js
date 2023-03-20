@@ -1,37 +1,37 @@
+import { createSelector } from "reselect";
 
-
-const decrementOrRemoveTtem = (cartItems, productToRemove) => {
-    //check if item count is greater than 1
-    const isItemExisting = cartItems.find(cartItem => cartItem.id === productToRemove.id && cartItem.quantity > 1);
-
-    if (isItemExisting) {
-        return cartItems.map(cartItem => cartItem.id === productToRemove.id ?
-            { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem)
-    } else {
-        return cartItems.filter(cartItem => cartItem.id !== productToRemove.id)
+export const selectCartReducer = (state) => {
+    return state.cart;
+} 
+//get cartItems from cart reducer
+export const selectCartItems = createSelector(
+    [selectCartReducer],
+    (cart) => {
+        return cart.cartItems;
     }
-}
-
-const removeItem = (cartItems, itemToRemove) => {
-    const cartItemMatch = cartItems.find(item => item.id === itemToRemove.id);
-    if (cartItemMatch) {
-        return cartItems.filter(cartItem => cartItem.id !== itemToRemove.id);
+);
+// get cart Toggle value from reducer
+export const selectIsCartOpen = createSelector(
+    [selectCartReducer],
+    (cart) => {
+        return cart.isCartOpen;
     }
-}
-
-const addCartTtem = (cartItems, productToAdd) => {
-    //check if cart item doesnt exist in list of cart items
-    // if so -> add to cart item list
-    // return new cart item list
-    // else if exists, increment quantity attrib of that item in cart item list by 1 
-    //return new cart item list
-
-    const cartItemMatch = cartItems.find((item) => { return item.id === productToAdd.id });
-
-    if (cartItemMatch) {
-        return cartItems.map(cartItem => (
-            cartItem.id === productToAdd.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
-        ))
+);
+//Calculate total value from the cartItems ; i.e
+// use selectCartItems component to retrieve the cartItems 
+export const selectCartTotal = createSelector(
+    [selectCartItems],
+    (cartItems) => {
+        const total = cartItems.reduce((accumulator, cartItem) => accumulator + (cartItem.quantity * cartItem.price), 0);
+        return total;
     }
-    return [...cartItems, { ...productToAdd, quantity: 1 }];
-}
+);
+//Calculate Count from the cartItems ; i.e
+// use selectCartItems component to retrieve the cartItems 
+export const selectCartCount = createSelector(
+    [selectCartItems],
+    (cartItems) => {
+        const result = cartItems.reduce((accumulator, cartItem) => accumulator + cartItem.quantity, 0);
+        return result;
+    }
+);
